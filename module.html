@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Default page for modules</title>
+</head>
+<body>
+<!-- CREATE MODULE IN SHOPER -->
+<!-- CHOSE A TEXT MODULE -->
+<!-- PASTE CODE BELOW AND SETUP VARIABLES -->
+<style>
+    .efiku-deliveryPromo-box {
+        background: #444444;
+        color: #e5e5e5;
+        font-family: "Ubuntu", "Roboto", "Arial", serif;
+        border-bottom: 1px solid #212121;
+        padding: 10px;
+        font-size: 1rem;
+        text-align: center;
+    }
+    .efiku-deliveryPromo-box strong{
+        color: goldenrod;
+    }
+</style>
+<script>
+    (function () {
+        const PROMO_END_HOUR = 12;
+        const PROMO_TEXT = "Order within <strong>%d</strong> and we will send your package today!";
+        const PROMO_CLASS_VISIBLE = "efiku-deliveryPromo-box";
+        const PROMO_CLASS_HIDDEN = "efiku-deliveryPromo-box--hidden";
+        const PROMO_REFRESH_SPEED = 1000;
+
+
+        let actualDate = new Date()
+        let deliveryPromoEnd = new Date();
+        deliveryPromoEnd.setHours(PROMO_END_HOUR);
+        deliveryPromoEnd.setMinutes(0);
+        deliveryPromoEnd.setSeconds(0);
+
+        let nodeElement = document.createElement('div');
+        nodeElement.setAttribute('class', PROMO_CLASS_VISIBLE);
+        document.body.insertAdjacentElement("afterbegin", nodeElement);
+        if (actualDate > deliveryPromoEnd || actualDate.getUTCDay() === 6 || actualDate.getUTCDay() === 7) {
+            nodeElement.setAttribute('class', PROMO_CLASS_HIDDEN);
+            return;
+        }
+        this.setInterval(function () {
+            actualDate = new Date();
+            let dateInterval = new Date(actualDate.getUTCFullYear(), actualDate.getUTCMonth(), actualDate.getUTCDate(), 0, 0);
+            let timeDifference = deliveryPromoEnd.getTime() - actualDate.getTime();
+            dateInterval = new Date(dateInterval.getTime() + timeDifference);
+            nodeElement.innerHTML = PROMO_TEXT.replace("%d", dateInterval.toLocaleTimeString());
+        }, PROMO_REFRESH_SPEED);
+    })()
+</script>
+</body>
+</html>
